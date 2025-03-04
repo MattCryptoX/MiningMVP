@@ -1,11 +1,6 @@
-import React, {
-  useMemo,
-  useContext,
-  createContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useContext, createContext } from "react";
 import { AppState } from "react-native";
+
 import BackgroundService from "react-native-background-actions";
 
 import { useUser } from "@/providers/UserProvider";
@@ -13,9 +8,9 @@ import { useWorkerState } from "@/hooks/useWorkerState";
 
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 import { Worker } from "@/types/worker";
-import { Id } from "@/convex/_generated/dataModel";
 
 const WorkerContext = createContext<any>(undefined);
 
@@ -43,7 +38,6 @@ export const WorkerProvider: React.FC<{ children: React.ReactNode }> = ({
   const deleteWorker = useMutation(api.worker.deleteWorker);
   const updateUser = useMutation(api.user.updateUser);
 
-  // Fetch worker data using useQuery
   const workerQuery = useQuery(
     api.worker.fetchWorker,
     user ? { userId: user?._id } : "skip",
