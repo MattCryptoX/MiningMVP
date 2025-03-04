@@ -5,7 +5,7 @@ import React from "react";
 import { SafeAreaView } from "react-native";
 
 import { useTheme } from "@/providers/ThemeProvider";
-import { AuthProvider } from "@/providers/AuthProvider";
+import { AuthenticationProvider } from "@/providers/AuthenticationProvider";
 
 import ContentRegister from "@/components/Auth/ContentRegister";
 
@@ -15,10 +15,10 @@ export default function Register() {
   const styles = createAuth(theme);
 
   return (
-    <AuthProvider>
+    <AuthenticationProvider>
       <SafeAreaView style={styles.container}>
         <ContentRegister />
       </SafeAreaView>
-    </AuthProvider>
+    </AuthenticationProvider>
   );
 }

@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native";
 
 import { useUser } from "@/providers/UserProvider";
 import { useTheme } from "@/providers/ThemeProvider";
-import { AuthProvider } from "@/providers/AuthProvider";
+import { AuthenticationProvider } from "@/providers/AuthenticationProvider";
 
 import ContentLogin from "@/components/Auth/ContentLogin";
 import LoadingWidget from "@/components/Widgets/LoadingWidget";
@@ -20,10 +20,10 @@ export default function LoginScreen() {
   if (isLoading) return <LoadingWidget />;
 
   return (
-    <AuthProvider>
+    <AuthenticationProvider>
       <SafeAreaView style={styles.container}>
         <ContentLogin />
       </SafeAreaView>
-    </AuthProvider>
+    </AuthenticationProvider>
   );
 }

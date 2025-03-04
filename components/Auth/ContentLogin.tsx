@@ -12,8 +12,8 @@ import {
 } from "react-native";
 
 import { useRouter } from "expo-router";
-import { useAuth } from "@/providers/AuthProvider";
 import { useTheme } from "@/providers/ThemeProvider";
+import { useAuthentication } from "@/providers/AuthenticationProvider";
 
 import ColumnWidget from "@/components/Widgets/ColumnWidget";
 import InputWidget from "@/components/Widgets/InputWidget";
@@ -24,7 +24,7 @@ export default function ContentLogin() {
   const { theme } = useTheme();
   const router = useRouter();
   const { state, actions, handleUrl, clearForm, handleLogin, handleSSO } =
-    useAuth();
+    useAuthentication();
 
   const styles = createAuth(theme);
 

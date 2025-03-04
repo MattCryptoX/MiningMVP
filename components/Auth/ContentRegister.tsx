@@ -12,8 +12,8 @@ import {
 } from "react-native";
 
 import { useRouter } from "expo-router";
-import { useAuth } from "@/providers/AuthProvider";
 import { useTheme } from "@/providers/ThemeProvider";
+import { useAuthentication } from "@/providers/AuthenticationProvider";
 
 import { OtpInputRef } from "react-native-otp-entry";
 
@@ -33,7 +33,7 @@ export default function ContentRegister() {
     clearForm,
     handleRegister,
     handleVerification,
-  } = useAuth();
+  } = useAuthentication();
 
   const styles = createAuth(theme);
 

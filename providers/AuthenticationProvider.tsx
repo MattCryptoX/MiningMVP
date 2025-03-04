@@ -1,4 +1,4 @@
-// Auth/AuthProvider.tsx
+// Auth/AuthenticationProvider.tsx
 import React, { useMemo, useState, useContext, createContext } from "react";
 import { Linking, Keyboard } from "react-native";
 
@@ -12,9 +12,9 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_REGEX =
   /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-const AuthContext = createContext<any>(undefined);
+const AuthenticationContext = createContext<any>(undefined);
 
-export const AuthProvider: React.FC<React.PropsWithChildren> = ({
+export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const { startSSOFlow } = useSSO();
@@ -248,14 +248,18 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
   );
 
   return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+    <AuthenticationContext.Provider value={contextValue}>
+      {children}
+    </AuthenticationContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
+export const useAuthentication = () => {
+  const context = useContext(AuthenticationContext);
   if (!context) {
-    throw new Error("useAuth must be used within a AuthProvider");
+    throw new Error(
+      "useAuthentication must be used within a AuthenticationProvider",
+    );
   }
   return context;
 };
