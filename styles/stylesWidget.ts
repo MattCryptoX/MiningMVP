@@ -37,7 +37,7 @@ export const createInput = (theme: Theme) => {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      paddingHorizontal: 20,
+      paddingHorizontal: 15,
       borderRadius: 10,
     },
     viewPrimary: {
