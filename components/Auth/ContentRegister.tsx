@@ -128,7 +128,9 @@ export default function ContentRegister() {
         <ButtonWidget
           isLoading={loading}
           disabled={
-            isVerification ? code.length < 6 : !emailAddress || !password
+            isVerification
+              ? code.length < 6
+              : !emailAddress || !password || !username
           }
           style={{ width: "100%", marginTop: 15 }}
           content={isVerification ? "VERIFY" : "REGISTER"}
