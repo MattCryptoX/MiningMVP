@@ -22,10 +22,10 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
 }) => {
   const { signOut } = useAuth();
   const router = useRouter();
+  const { userId: clerkId, isSignedIn } = useAuth();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const { userId: clerkId, isSignedIn } = useAuth();
   const userQuery = useQuery(api.user.fetchUser, {
     clerkId: clerkId || "skip",
   });
@@ -45,9 +45,9 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
     if (!isSignedIn) {
       router.replace("/");
     } else if (user?._id && isSignedIn) {
-      router.replace("/(tabs)");
+      // router.replace("/(tabs)");
     } else if (!user?._id && isSignedIn) {
-      router.push("/(auth)/onboarding");
+      // router.push("/(auth)/onboarding");
     }
 
     stopLoading(500);
