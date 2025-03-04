@@ -10,14 +10,14 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.jvictoryliner.strx"
+      "bundleIdentifier": "com.strx"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/images/strx.png",
+        "backgroundColor": "#25242B"
       },
-      "package": "com.jvictoryliner.strx"
+      "package": "com.strx"
     },
     "web": {
       "bundler": "metro",
@@ -26,13 +26,14 @@
     },
     "plugins": [
       "expo-router",
+      "expo-secure-store",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/strx.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#25242B"
         }
       ]
     ],
