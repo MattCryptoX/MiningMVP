@@ -74,7 +74,7 @@ export default function TabsNavigator() {
       screenOptions={{ headerShown: false, gestureEnabled: false }}
       tabBar={(props: TabBarProps) => <TabButton {...props} />}
       renderCircle={(props: TabBarProps) => <TabButton {...props} isCircle />}
-      bgColor={colors.dark.view.primary}
+      bgColor={colors.dark.view.secondary}
     >
       <CurvedBottomBar.Screen
         name={"referral"}
