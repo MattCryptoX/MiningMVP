@@ -39,28 +39,17 @@ export const WorkerProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { user } = useUser();
 
-  const [fetchedWorker, setFetchedWorker] = useState<Worker | null>(null);
-
   const createWorker = useMutation(api.worker.createWorker);
   const deleteWorker = useMutation(api.worker.deleteWorker);
   const updateUser = useMutation(api.user.updateUser);
 
+  // Fetch worker data using useQuery
   const workerQuery = useQuery(
     api.worker.fetchWorker,
     user ? { userId: user?._id } : "skip",
   );
 
   const worker = ((workerQuery?.data || null) as Worker) || null;
-
-  const fetchWorker = async () => {
-    if (user) {
-      // @ts-ignore
-      const workerData = await api.worker.fetchWorker({
-        userId: user._id as Id<"user">,
-      });
-      setFetchedWorker(workerData);
-    }
-  };
 
   const handleStartMining = async (userId: Id<"user">) => {
     await createWorker({ userId, rate: 1 });
@@ -71,7 +60,9 @@ export const WorkerProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const handleUpdateBalance = async (earnedAmount: number) => {
-    const updatedBalance = user.balance + earnedAmount;
+    if (!user) return;
+
+    const updatedBalance = (user.balance || 0) + earnedAmount;
 
     await updateUser({
       userId: user._id as Id<"user">,
@@ -91,7 +82,6 @@ export const WorkerProvider: React.FC<{ children: React.ReactNode }> = ({
         const backgroundTask = async (taskData?: { delay: number }) => {
           const delay = taskData?.delay ?? 1000;
           while (BackgroundService.isRunning()) {
-            await fetchWorker();
             await new Promise((resolve) => setTimeout(resolve, delay));
           }
         };
@@ -103,11 +93,10 @@ export const WorkerProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     const handleAppStateChange = (nextAppState: string) => {
-      console.log(nextAppState);
-      if (nextAppState === "background" || nextAppState === "inactive") {
-        startBackgroundService();
-      } else if (nextAppState === "active") {
+      if (nextAppState === "active") {
         BackgroundService.stop();
+      } else {
+        startBackgroundService();
       }
     };
 
@@ -120,7 +109,7 @@ export const WorkerProvider: React.FC<{ children: React.ReactNode }> = ({
       subscription.remove();
       BackgroundService.stop();
     };
-  }, [fetchedWorker]);
+  }, []);
 
   const contextValue = useMemo(
     () => ({
