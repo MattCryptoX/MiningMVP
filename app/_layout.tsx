@@ -1,6 +1,5 @@
 // _layout.tsx
-import React, { useEffect } from "react";
-import { useFonts } from "expo-font";
+import React, { useEffect, useState } from "react";
 
 import "react-native-reanimated";
 
@@ -9,7 +8,7 @@ import * as SplashScreen from "expo-splash-screen";
 
 import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { ClerkProvider, ClerkLoaded, useAuth } from "@clerk/clerk-expo";
+import { ClerkLoaded, ClerkProvider, useAuth } from "@clerk/clerk-expo";
 
 import MainNavigator from "@/app/navigator";
 
@@ -44,9 +43,11 @@ const tokenCache = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  });
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
 
   useEffect(() => {
     if (loaded) {
@@ -64,9 +65,7 @@ export default function RootLayout() {
       publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!}
     >
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        <ClerkLoaded>
-          <MainNavigator />
-        </ClerkLoaded>
+        <MainNavigator />
       </ConvexProviderWithClerk>
     </ClerkProvider>
   );
