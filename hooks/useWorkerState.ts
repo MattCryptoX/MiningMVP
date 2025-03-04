@@ -1,11 +1,13 @@
 // hooks/useWorkerState.ts
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+
+import { Id } from "@/convex/_generated/dataModel";
 
 import { Worker } from "@/types/worker";
 
 export const useWorkerState = (
   worker: Worker | null,
-  handleStopMining: () => void,
+  handleStopMining: (userId: Id<"user">) => void,
   handleUpdateBalance: (balance: number) => void,
 ) => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
@@ -19,7 +21,12 @@ export const useWorkerState = (
 
       setTimeLeft(remainingTime);
 
-      if (remainingTime === 0) handleStopMining();
+      if (remainingTime === 0) {
+        handleStopMining(worker.userId);
+      }
+    } else {
+      setTimeLeft(null);
+      setEarnedCoins(0);
     }
   }, [worker]);
 
@@ -30,19 +37,21 @@ export const useWorkerState = (
       setTimeLeft((prev) => {
         if (!prev || prev <= 1000) {
           clearInterval(interval);
-          handleStopMining();
+          handleStopMining(worker?.userId as Id<"user">);
+          setTimeLeft(null);
+          setEarnedCoins(0);
           return 0;
         }
         return prev - 1000;
       });
 
-      // Calculate earned coins based on rate
       if (worker?._creationTime) {
         const elapsedTime = Date.now() - worker._creationTime;
-        const rate = worker?.rate || 1; // Default to 1 if not set
-        const coins = (elapsedTime / (60 * 60 * 1000)) * rate; // Adjusted for rate
-        setEarnedCoins(parseFloat(coins.toFixed(4))); // Display up to 4 decimal places
+        const rate = worker?.rate || 1;
+        const coins = (elapsedTime / (60 * 60 * 1000)) * rate;
+
         handleUpdateBalance(parseFloat(coins.toFixed(4)));
+        setEarnedCoins(parseFloat(coins.toFixed(4)));
       }
     }, 1000);
 

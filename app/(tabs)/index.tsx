@@ -10,9 +10,14 @@ import LoadingWidget from "@/components/Widgets/LoadingWidget";
 import { Coin } from "phosphor-react-native";
 
 export default function HomeScreen() {
-  const { isLoading } = useUser();
-  const { worker, handleStartMining, formattedTimeLeft, earnedCoins } =
-    useWorker();
+  const { user, isLoading } = useUser();
+  const {
+    worker,
+    handleStopMining,
+    handleStartMining,
+    formattedTimeLeft,
+    earnedCoins,
+  } = useWorker();
 
   if (isLoading) return <LoadingWidget showLogo={false} />;
 
@@ -34,12 +39,23 @@ export default function HomeScreen() {
           justifyContent: "center",
           alignItems: "center",
         }}
-        onPress={handleStartMining}
+        onPress={() => handleStartMining(user?._id)}
       >
         <Coin size={32} weight="fill" color={"#fff"} />
       </TouchableOpacity>
       <Text>{formattedTimeLeft}</Text>
       <Text>{earnedCoins}</Text>
+      <TouchableOpacity
+        style={{
+          width: 100,
+          height: 100,
+          backgroundColor: "red",
+          borderRadius: 50,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onPress={() => handleStopMining(user?._id)}
+      ></TouchableOpacity>
     </View>
   );
 }
