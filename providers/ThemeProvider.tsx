@@ -11,7 +11,7 @@ import { useColorScheme } from "react-native";
 import { useUser } from "@/providers/UserProvider";
 
 import { useQuery } from "convex/react";
-import { api } from "@/convex-api";
+import { api } from "@/convex/_generated/api";
 
 import { Theme, UserSettings } from "@/types/settings";
 
