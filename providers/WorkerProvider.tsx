@@ -54,6 +54,7 @@ export const WorkerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchWorker = async () => {
     if (user) {
+      // @ts-ignore
       const workerData = await api.worker.fetchWorker({
         userId: user._id as Id<"user">,
       });
