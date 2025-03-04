@@ -77,7 +77,7 @@ export default function TabsNavigator() {
       bgColor={colors.light.view.secondary}
     >
       <CurvedBottomBar.Screen
-        name={"profile"}
+        name={"referral"}
         position={"LEFT"}
         component={() => <ReferralScreen />}
       />

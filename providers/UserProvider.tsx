@@ -30,7 +30,7 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
     clerkId: clerkId || "skip",
   });
   const user = ((userQuery?.data || null) as User) || null;
-
+  console.log(userQuery);
   const stopLoading = (delay: number) => {
     setTimeout(() => {
       setIsLoading(false);
@@ -42,10 +42,8 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
       return;
     }
 
-    if (!isSignedIn) {
-      router.replace("/");
-    } else if (user?._id && isSignedIn) {
-      router.replace("/(tabs)");
+    if (user?._id && isSignedIn) {
+      router.push("/(tabs)");
     } else if (!user?._id && isSignedIn) {
       setIsLoading(true);
     }

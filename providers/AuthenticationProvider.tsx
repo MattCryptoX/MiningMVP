@@ -8,6 +8,12 @@ import { handleNotifier } from "@/components/Widgets/NotificationWidget";
 
 import type { OAuthStrategy } from "@clerk/types";
 
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+
+import { Theme } from "@/types/settings";
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_REGEX =
   /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -29,13 +35,15 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
     setActive: signUpSetActive,
   } = useSignUp();
 
+  const createUser = useMutation(api.user.createUser);
+  const createUserSettings = useMutation(api.userSettings.createUserSettings);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [hidePassword, setHidePassword] = useState<boolean>(true);
   const [isVerification, setIsVerification] = useState<boolean>(false);
 
   const [username, setUsername] = useState<string>("");
   const [emailAddress, setEmailAddress] = useState<string>("");
-  const [referral, setReferral] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [code, setCode] = useState<string>("");
 
@@ -84,6 +92,7 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
     try {
       await signUp.create({
         emailAddress: emailAddress.trim(),
+        username: username.trim(),
         password: password.trim(),
       });
 
@@ -114,30 +123,53 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
     setLoading(true);
 
     try {
-      const { status, createdSessionId } =
+      const { status, createdSessionId, createdUserId } =
         await signUp.attemptEmailAddressVerification({ code });
 
       if (status === "complete") {
-        handleNotifier(
-          "Verification Success!",
-          "Welcome! Please complete the onboarding process.",
-          "success",
-        );
-
+        await handleWriteToDatabase(createdUserId || "");
         await signUpSetActive({ session: createdSessionId });
         clearForm();
         return;
       }
-
-      throw new Error("Verification Failed");
     } catch (error) {
       handleNotifier(
-        "Verification Failed.",
-        "Sorry! An error has occurred. Please try again.",
+        "Verification Failed",
+        "Sorry! An error occurred. Please try again.",
         "error",
       );
+      console.error("Verification Error:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleWriteToDatabase = async (clerkId: string) => {
+    try {
+      const userPayload = {
+        clerkId: clerkId || "",
+        email: emailAddress.trim(),
+        username: username.trim(),
+        balance: 0,
+      };
+
+      const { data: userId } = await createUser(userPayload);
+      if (!userId) throw new Error("Failed to create user");
+
+      const userSettingsPayload = {
+        userId: userId as Id<"user">,
+        language: "en",
+        theme: "Dark" as Theme,
+      };
+
+      const { data: userSettingsId } =
+        await createUserSettings(userSettingsPayload);
+      if (!userSettingsId) throw new Error("Failed to create user settings");
+
+      handleNotifier("Verification Success!", "Welcome to STRX!", "success");
+    } catch (error) {
+      console.error("Database Write Error:", error);
+      handleNotifier("Database Error", "Failed to save user data.", "error");
     }
   };
 
@@ -191,7 +223,6 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
     () => ({
       username,
       emailAddress,
-      referral,
       password,
       code,
       loading,
@@ -201,7 +232,6 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
     [
       username,
       emailAddress,
-      referral,
       password,
       code,
       loading,
@@ -214,7 +244,6 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
     () => ({
       setUsername,
       setEmailAddress,
-      setReferral,
       setPassword,
       setCode,
       setLoading,

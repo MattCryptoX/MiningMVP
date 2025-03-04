@@ -40,7 +40,6 @@ export default function ContentRegister() {
   const {
     username,
     emailAddress,
-    referral,
     password,
     code,
     loading,
@@ -50,7 +49,6 @@ export default function ContentRegister() {
   const {
     setUsername,
     setEmailAddress,
-    setReferral,
     setPassword,
     setCode,
     setHidePassword,
@@ -73,38 +71,27 @@ export default function ContentRegister() {
       />
 
       <ColumnWidget style={{ width: "100%", gap: 15, paddingHorizontal: 10 }}>
-        <RowWidget style={{ gap: 10 }}>
-          <InputWidget
-            style={{ width: "50%" }}
-            ref={usernameRef}
-            label={"Username"}
-            value={username}
-            editable={!isVerification}
-            onChangeText={setUsername}
-            placeholder={"John Doe"}
-            onSubmitEditing={() => emailRef.current?.focus()}
-          />
-          <InputWidget
-            style={{ width: "50%" }}
-            ref={emailRef}
-            label={"Email"}
-            value={emailAddress}
-            editable={!isVerification}
-            onChangeText={setEmailAddress}
-            placeholder={"johndoe@gmail.com"}
-            onSubmitEditing={() => referralRef.current?.focus()}
-          />
-        </RowWidget>
         <InputWidget
           style={{ width: "100%" }}
-          ref={referralRef}
-          label={"Referral Code"}
-          value={referral}
+          ref={usernameRef}
+          label={"Username"}
+          value={username}
           editable={!isVerification}
-          onChangeText={setReferral}
-          placeholder={"(Optional)"}
-          onSubmitEditing={() => passwordRef.current?.focus()}
+          onChangeText={setUsername}
+          placeholder={"John Doe"}
+          onSubmitEditing={() => emailRef.current?.focus()}
         />
+        <InputWidget
+          style={{ width: "100%" }}
+          ref={emailRef}
+          label={"Email"}
+          value={emailAddress}
+          editable={!isVerification}
+          onChangeText={setEmailAddress}
+          placeholder={"johndoe@gmail.com"}
+          onSubmitEditing={() => referralRef.current?.focus()}
+        />
+
         {isVerification ? (
           <OtpWidget
             ref={otpRef}
