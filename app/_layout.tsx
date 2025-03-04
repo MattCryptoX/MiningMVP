@@ -65,7 +65,9 @@ export default function RootLayout() {
       publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!}
     >
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        <MainNavigator />
+        <ClerkLoaded>
+          <MainNavigator />
+        </ClerkLoaded>
       </ConvexProviderWithClerk>
     </ClerkProvider>
   );
