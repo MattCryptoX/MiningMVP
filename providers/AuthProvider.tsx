@@ -33,8 +33,9 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
   const [hidePassword, setHidePassword] = useState<boolean>(true);
   const [isVerification, setIsVerification] = useState<boolean>(false);
 
-  const [emailAddress, setEmailAddress] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  const [emailAddress, setEmailAddress] = useState<string>("");
+  const [referral, setReferral] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [code, setCode] = useState<string>("");
 
@@ -44,6 +45,7 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
 
   const clearForm = () => {
     setEmailAddress("");
+    setUsername("");
     setPassword("");
   };
 
@@ -187,8 +189,9 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
 
   const state = useMemo(
     () => ({
-      emailAddress,
       username,
+      emailAddress,
+      referral,
       password,
       code,
       loading,
@@ -196,8 +199,9 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
       isVerification,
     }),
     [
-      emailAddress,
       username,
+      emailAddress,
+      referral,
       password,
       code,
       loading,
@@ -208,8 +212,9 @@ export const AuthProvider: React.FC<React.PropsWithChildren> = ({
 
   const actions = useMemo(
     () => ({
-      setEmailAddress,
       setUsername,
+      setEmailAddress,
+      setReferral,
       setPassword,
       setCode,
       setLoading,
