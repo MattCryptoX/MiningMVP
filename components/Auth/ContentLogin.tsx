@@ -23,7 +23,8 @@ import RowWidget from "@/components/Widgets/RowWidget";
 export default function ContentLogin() {
   const { theme } = useTheme();
   const router = useRouter();
-  const { state, actions, clearForm, handleLogin, handleSSO } = useAuth();
+  const { state, actions, handleUrl, clearForm, handleLogin, handleSSO } =
+    useAuth();
 
   const styles = createAuth(theme);
 
@@ -77,7 +78,7 @@ export default function ContentLogin() {
             disabled={loading}
             onPress={() => {
               clearForm();
-              router.push("/(auth)/register");
+              router.push("/register");
             }}
           >
             <Text style={styles.textPrimary}>Sign Up</Text>
@@ -105,7 +106,7 @@ export default function ContentLogin() {
         <Text style={styles.textWhite}>
           By using Strx, you are agreeing to our
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleUrl}>
           <Text style={styles.textPrimary}>Terms of Service</Text>
         </TouchableOpacity>
       </ColumnWidget>
