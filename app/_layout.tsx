@@ -4,14 +4,14 @@ import { useFonts } from "expo-font";
 
 import "react-native-reanimated";
 
-import { Stack } from "expo-router";
-
 import * as SecureStore from "expo-secure-store";
 import * as SplashScreen from "expo-splash-screen";
 
 import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { ClerkProvider, ClerkLoaded, useAuth } from "@clerk/clerk-expo";
+
+import MainNavigator from "@/app/navigator";
 
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!, {
   unsavedChangesWarning: false,
@@ -65,10 +65,7 @@ export default function RootLayout() {
     >
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
         <ClerkLoaded>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
+          <MainNavigator />
         </ClerkLoaded>
       </ConvexProviderWithClerk>
     </ClerkProvider>
