@@ -30,7 +30,7 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
     clerkId: clerkId || "skip",
   });
   const user = ((userQuery?.data || null) as User) || null;
-  console.log(userQuery);
+
   const stopLoading = (delay: number) => {
     setTimeout(() => {
       setIsLoading(false);

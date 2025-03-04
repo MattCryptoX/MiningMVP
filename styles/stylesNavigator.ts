@@ -18,7 +18,6 @@ export const createTabsNavigator = (theme: Theme) => {
       width: 60,
       height: 60,
       borderRadius: 30,
-      backgroundColor: themeColors.view.secondary,
     },
     shadow: {
       shadowColor: "#000000",
