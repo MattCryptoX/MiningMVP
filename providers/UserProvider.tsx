@@ -45,9 +45,9 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
     if (!isSignedIn) {
       router.replace("/");
     } else if (user?._id && isSignedIn) {
-      // router.replace("/(tabs)");
+      router.replace("/(tabs)");
     } else if (!user?._id && isSignedIn) {
-      // router.push("/(auth)/onboarding");
+      setIsLoading(true);
     }
 
     stopLoading(500);
