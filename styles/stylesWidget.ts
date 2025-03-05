@@ -74,7 +74,7 @@ export const createButton = (theme: Theme) => {
 
   return StyleSheet.create({
     button: {
-      gap: 5,
+      gap: 7.5,
       height: 60,
       flexDirection: "row",
       alignItems: "center",
@@ -102,6 +102,20 @@ export const createButton = (theme: Theme) => {
     },
     textSecondary: {
       color: themeColors.accent,
+    },
+  });
+};
+
+export const createCard = (theme: Theme) => {
+  const themeColors = theme === "Dark" ? colors.dark : colors.light;
+
+  return StyleSheet.create({
+    card: {
+      width: "100%",
+      height: "auto",
+      padding: 20,
+      borderRadius: 10,
+      backgroundColor: themeColors.view.secondary,
     },
   });
 };
