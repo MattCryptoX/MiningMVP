@@ -48,10 +48,8 @@ export const useWorkerState = (
       if (worker?.rate) {
         const ratePerSecond = worker.rate / 3600;
 
-        handleUpdateBalance(
-          parseFloat((earnedCoins + ratePerSecond).toFixed(4)),
-        );
-        setEarnedCoins((prev) => parseFloat((prev + ratePerSecond).toFixed(4)));
+        handleUpdateBalance(parseFloat(ratePerSecond.toFixed(4)));
+        setEarnedCoins(parseFloat(ratePerSecond.toFixed(4)));
       }
     }, 1000);
 
