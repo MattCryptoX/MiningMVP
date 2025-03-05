@@ -2,7 +2,7 @@
 import { createReferral } from "@/styles/stylesTabs";
 
 import React from "react";
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView, SafeAreaView } from "react-native";
 
 import { useTheme } from "@/providers/ThemeProvider";
 import { useReferral } from "@/providers/ReferralProvider";
@@ -22,6 +22,14 @@ export default function ContentReferral() {
 
   const styles = createReferral(theme);
 
+  if (!referee.length) {
+    return (
+      <SafeAreaView style={[styles.content, { alignItems: "center" }]}>
+        <Text style={styles.unknownText}>No Referrals Found.</Text>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <ScrollView style={styles.content} bounces={false}>
       {referee.map(
@@ -35,15 +43,16 @@ export default function ContentReferral() {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 marginBottom: 10,
+                paddingHorizontal: 15,
               }}
             >
               <RowWidget style={{ gap: 10 }}>
                 <UserCircle size={40} weight="fill" color="#20AB7D" />
                 <ColumnWidget style={{ alignItems: "flex-start", gap: 5 }}>
-                  <Text style={styles.whiteText}>
+                  <Text style={styles.contentText}>
                     {username} | {formattedId}
                   </Text>
-                  <Text style={styles.whiteText}>{email}</Text>
+                  <Text style={styles.contentText}>{email}</Text>
                 </ColumnWidget>
               </RowWidget>
 

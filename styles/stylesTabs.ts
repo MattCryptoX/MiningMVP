@@ -88,9 +88,16 @@ export const createReferral = (theme: Theme) => {
       color: themeColors.accent,
       fontFamily: fonts.inter.bold,
     },
-    whiteText: {
+    contentText: {
       fontSize: 15,
-      color: themeColors.white,
+      color: themeColors.text.primary,
+      fontFamily: fonts.inter.semiBold,
+    },
+    unknownText: {
+      fontSize: 17.5,
+      marginTop: 50,
+      color: themeColors.accent,
+      fontFamily: fonts.inter.semiBold,
     },
     chipView: {
       gap: 5,
@@ -108,6 +115,7 @@ export const createReferral = (theme: Theme) => {
     chipIdle: {
       fontSize: 15,
       color: themeColors.warning,
+      fontFamily: fonts.inter.semiBold,
     },
   });
 };
