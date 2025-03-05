@@ -13,6 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as schemas_referral from "../schemas/referral.js";
 import type * as schemas_user from "../schemas/user.js";
 import type * as schemas_userSettings from "../schemas/userSettings.js";
 import type * as schemas_worker from "../schemas/worker.js";
@@ -30,6 +31,7 @@ import type * as worker from "../worker.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  "schemas/referral": typeof schemas_referral;
   "schemas/user": typeof schemas_user;
   "schemas/userSettings": typeof schemas_userSettings;
   "schemas/worker": typeof schemas_worker;
