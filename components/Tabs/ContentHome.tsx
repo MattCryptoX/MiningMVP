@@ -49,17 +49,11 @@ export default function ContentHome() {
             {isNaN(user?.balance) ? 0 : user?.balance?.toFixed(4)}
           </Text>
           <Text style={styles.rate}>
-            +{isNaN(worker?.rate) ? 0 : (worker?.rate / 3600).toFixed(4)}{" "}
-            STRX/hr
+            +{isNaN(worker?.rate) ? 0 : (worker?.rate).toFixed(2)} STRX/hr
           </Text>
         </ColumnWidget>
 
-        <RowWidget justifyContent={"space-between"}>
-          <ColumnWidget>
-            <Text style={styles.title}>EARNINGS</Text>
-            <Text style={styles.content}>{earnedCoins.toFixed(4)}</Text>
-          </ColumnWidget>
-
+        <RowWidget justifyContent={"space-evenly"}>
           <ColumnWidget>
             <Text style={styles.title}>TIME LEFT</Text>
             <Text style={styles.content}>{formattedTimeLeft}</Text>
