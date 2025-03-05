@@ -43,7 +43,6 @@ export const WorkerProvider: React.FC<{ children: React.ReactNode }> = ({
     api.worker.fetchWorker,
     user ? { userId: user?._id } : "skip",
   );
-
   const worker = ((workerQuery?.data || null) as Worker) || null;
 
   const handleStartMining = async (userId: Id<"user">) => {
