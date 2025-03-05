@@ -38,8 +38,8 @@ export default function ButtonWidget({
 
   const styles = createButton(theme);
 
-  const renderLogo = (isPrimary: boolean) => {
-    const color = isPrimary ? "#FFFFFF" : "#f97316";
+  const renderLogo = (isPrimary: boolean, disabled: boolean) => {
+    const color = disabled ? "#cccccc" : isPrimary ? "#FFFFFF" : "#f97316";
 
     switch (icon) {
       case "google":
@@ -66,7 +66,7 @@ export default function ButtonWidget({
       onPress={onPress}
       disabled={disabled}
     >
-      {renderLogo(isPrimary)}
+      {renderLogo(isPrimary, disabled)}
 
       {isLoading ? (
         <ActivityIndicator size={"small"} color={"white"} />
