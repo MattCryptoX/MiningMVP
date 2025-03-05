@@ -1,6 +1,9 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
+import { Id } from "./_generated/dataModel";
+import { ReferralData, Referral } from "./types";
+
 import { referralSchema } from "./schemas/referral";
 
 import { makeSchemaValuesOptional } from "./utils";
@@ -31,27 +34,50 @@ export const fetchReferrals = query({
   args: {
     userId: v.id("user"),
   },
-  handler: async (ctx, args) => {
+  handler: async (
+    ctx,
+    args,
+  ): Promise<ReferralData & { flattenedIds?: Id<"user">[] }> => {
     const { userId } = args;
 
     try {
-      const referredByUser = await ctx.db
+      const referredByUser: Referral[] = await ctx.db
         .query("referral")
         .withIndex("by_referrer", (q) => q.eq("referrer", userId))
         .collect();
 
-      const referredToUser = await ctx.db
+      const referredToUser: Referral[] = await ctx.db
         .query("referral")
         .withIndex("by_referee", (q) => q.eq("referee", userId))
         .collect();
 
+      const flattenReferralIds = (
+        referralsAsReferrer: Referral[],
+        referralsAsReferee: Referral[],
+        userId: Id<"user">,
+      ): Id<"user">[] => {
+        const referrerIds: Id<"user">[] = referralsAsReferrer.map(
+          (ref) => ref.referee,
+        );
+        const refereeIds: Id<"user">[] = referralsAsReferee.map(
+          (ref) => ref.referrer,
+        );
+
+        return [...new Set([...referrerIds, ...refereeIds])].filter(
+          (id) => id !== userId,
+        );
+      };
+
       return {
         success: true,
-        referralsAsReferrer: referredByUser,
-        referralsAsReferee: referredToUser,
+        flattenedIds: flattenReferralIds(
+          referredByUser,
+          referredToUser,
+          userId,
+        ),
       };
     } catch (error) {
-      return { success: false, message: error };
+      return { success: false };
     }
   },
 });

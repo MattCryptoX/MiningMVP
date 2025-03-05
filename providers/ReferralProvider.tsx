@@ -8,6 +8,8 @@ import React, {
   createContext,
 } from "react";
 
+import { useUser } from "@/providers/UserProvider";
+
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
@@ -16,6 +18,8 @@ const ReferralContext = createContext<any>(undefined);
 export const ReferralProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
+  const { user } = useUser();
+
   const contextValue = useMemo(() => ({}), []);
 
   return (

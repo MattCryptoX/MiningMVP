@@ -1,4 +1,4 @@
-import { Id } from "@/convex/_generated/dataModel";
+import { Id } from "./_generated/dataModel";
 
 export type Referral = {
   _creationTime: number;
@@ -8,7 +8,7 @@ export type Referral = {
 };
 
 export type ReferralData = {
-  referralsAsReferrer: Referral[];
-  referralsAsReferee: Referral[];
   success: boolean;
+  referralsAsReferrer?: Referral[];
+  referralsAsReferee?: Referral[];
 };
