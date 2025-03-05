@@ -1,3 +1,4 @@
+// Worker/WorkerProvider.tsx
 import React, { useEffect, useMemo, useContext, createContext } from "react";
 import { AppState } from "react-native";
 
