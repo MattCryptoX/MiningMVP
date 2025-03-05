@@ -48,6 +48,28 @@ export const fetchWorker = query({
   },
 });
 
+export const fetchWorkers = query({
+  args: {
+    userIds: v.array(v.id("user")),
+  },
+  handler: async (ctx, args) => {
+    const { userIds } = args;
+
+    const workers = await Promise.all(
+      userIds.map(async (userId) => {
+        const worker = await ctx.db
+          .query("worker")
+          .filter((q) => q.eq(q.field("userId"), userId))
+          .first();
+
+        return worker ? { ...worker } : null;
+      }),
+    );
+
+    return { success: true, data: workers.filter(Boolean) };
+  },
+});
+
 export const deleteWorker = mutation({
   args: {
     userId: v.id("user"),
