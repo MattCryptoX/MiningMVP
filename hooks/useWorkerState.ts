@@ -45,18 +45,18 @@ export const useWorkerState = (
         return prev - 1000;
       });
 
-      if (worker?._creationTime) {
-        const elapsedTime = Date.now() - worker._creationTime;
-        const rate = worker?.rate || 1;
-        const coins = (elapsedTime / (60 * 60 * 1000)) * rate;
+      if (worker?.rate) {
+        const ratePerSecond = worker.rate / 3600;
 
-        handleUpdateBalance(parseFloat(coins.toFixed(4)));
-        setEarnedCoins(parseFloat(coins.toFixed(4)));
+        handleUpdateBalance(
+          parseFloat((earnedCoins + ratePerSecond).toFixed(4)),
+        );
+        setEarnedCoins((prev) => parseFloat((prev + ratePerSecond).toFixed(4)));
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [timeLeft, worker?.rate]);
+  }, [timeLeft, worker?.rate, earnedCoins]);
 
   const formattedTimeLeft = timeLeft
     ? new Date(timeLeft).toISOString().substr(11, 8)
