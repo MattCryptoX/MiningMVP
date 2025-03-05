@@ -17,8 +17,14 @@ export default function MainNavigator() {
           <ThemeProvider>
             <WorkerProvider>
               <Stack>
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name={"(auth)"}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name={"(tabs)"}
+                  options={{ headerShown: false }}
+                />
               </Stack>
             </WorkerProvider>
           </ThemeProvider>
