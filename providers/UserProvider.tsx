@@ -49,7 +49,7 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
     }
 
     stopLoading(500);
-  }, [user, isSignedIn, router]);
+  }, [isSignedIn, router]);
 
   const handleLogout = async () => {
     await signOut();
