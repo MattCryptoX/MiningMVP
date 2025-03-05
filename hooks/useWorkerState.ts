@@ -15,7 +15,7 @@ export const useWorkerState = (
 
   useEffect(() => {
     if (worker?._creationTime) {
-      const expirationTime = worker._creationTime + 24 * 60 * 60 * 1000; // 24 hours in ms
+      const expirationTime = worker._creationTime + 24 * 60 * 60 * 1000;
       const now = Date.now();
       const remainingTime = Math.max(expirationTime - now, 0);
 
@@ -47,9 +47,10 @@ export const useWorkerState = (
 
       if (worker?.rate) {
         const ratePerSecond = worker.rate / 3600;
+        const earned = parseFloat(ratePerSecond.toFixed(4));
 
-        handleUpdateBalance(parseFloat(ratePerSecond.toFixed(4)));
-        setEarnedCoins(parseFloat(ratePerSecond.toFixed(4)));
+        handleUpdateBalance(earned);
+        setEarnedCoins((prev) => parseFloat((prev + earned).toFixed(4)));
       }
     }, 1000);
 
