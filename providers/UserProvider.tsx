@@ -1,5 +1,6 @@
 // User/UserProvider.tsx
 import React, {
+  useRef,
   useMemo,
   useState,
   useEffect,
@@ -25,6 +26,7 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
   const { userId: clerkId, isSignedIn } = useAuth();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const hasNavigated = useRef<boolean>(false);
 
   const userQuery = useQuery(api.user.fetchUser, {
     clerkId: clerkId || "skip",
@@ -38,22 +40,23 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
   };
 
   useEffect(() => {
+    if (!isSignedIn) return;
+
     if (user === null) {
-      stopLoading(500);
       return;
     }
 
-    if (user?._id && isSignedIn) {
+    if (!hasNavigated.current && user?._id) {
+      hasNavigated.current = true;
       router.push("/(tabs)");
-    } else if (!user?._id && isSignedIn) {
-      setIsLoading(true);
     }
 
     stopLoading(1000);
-  }, [isSignedIn, router]);
+  }, [user]);
 
   const handleLogout = async () => {
     await signOut();
+    hasNavigated.current = false;
     stopLoading(0);
     router.replace("/(auth)");
   };
