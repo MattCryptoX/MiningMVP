@@ -27,52 +27,29 @@ export const updateReferral = mutation({
   },
 });
 
-export const fetchReferral = query({
+export const fetchReferrals = query({
   args: {
-    referrer: v.id("user"),
-    referee: v.id("user"),
+    userId: v.id("user"),
   },
   handler: async (ctx, args) => {
-    const { referrer, referee } = args;
+    const { userId } = args;
 
     try {
-      const data = await ctx.db
+      const referredByUser = await ctx.db
         .query("referral")
-        .filter((q) =>
-          q.or(
-            q.and(
-              q.eq(q.field("referrer"), referrer),
-              q.eq(q.field("referee"), referee),
-            ),
-            q.and(
-              q.eq(q.field("referrer"), referee),
-              q.eq(q.field("referee"), referrer),
-            ),
-          ),
-        )
-        .first();
-
-      return { success: true, data };
-    } catch (error) {
-      return { success: false, message: error };
-    }
-  },
-});
-
-export const fetchReferralsByReferrer = query({
-  args: {
-    referrer: v.id("user"),
-  },
-  handler: async (ctx, args) => {
-    const { referrer } = args;
-
-    try {
-      const data = await ctx.db
-        .query("referral")
-        .withIndex("by_referrer", (q) => q.eq("referrer", referrer))
+        .withIndex("by_referrer", (q) => q.eq("referrer", userId))
         .collect();
 
-      return { success: true, data };
+      const referredToUser = await ctx.db
+        .query("referral")
+        .withIndex("by_referee", (q) => q.eq("referee", userId))
+        .collect();
+
+      return {
+        success: true,
+        referralsAsReferrer: referredByUser,
+        referralsAsReferee: referredToUser,
+      };
     } catch (error) {
       return { success: false, message: error };
     }
