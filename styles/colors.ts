@@ -13,6 +13,7 @@ export const colors = {
     },
     accent: "#20AB7D",
     white: "#FFFFFF",
+    warning: "#ab6f20",
     negative: "#FF0000",
   },
   dark: {
@@ -28,6 +29,7 @@ export const colors = {
     },
     accent: "#20AB7D",
     white: "#FFFFFF",
+    warning: "#ab6f20",
     negative: "#FF0000",
   },
 };

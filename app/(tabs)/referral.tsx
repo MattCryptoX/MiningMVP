@@ -1,16 +1,23 @@
-// Home/referral.tsx
+// Referral/Index.tsx
+import { createReferral } from "@/styles/stylesTabs";
+
 import React from "react";
-import { View } from "react-native";
+import { SafeAreaView } from "react-native";
+
+import { useTheme } from "@/providers/ThemeProvider";
+
+import HeaderReferral from "@/components/Tabs/HeaderReferral";
+import ContentReferral from "@/components/Tabs/ContentReferral";
 
 export default function ReferralScreen() {
+  const { theme } = useTheme();
+
+  const styles = createReferral(theme);
+
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "yellow",
-      }}
-    >
-      <></>
-    </View>
+    <SafeAreaView style={styles.screen}>
+      <HeaderReferral />
+      <ContentReferral />
+    </SafeAreaView>
   );
 }

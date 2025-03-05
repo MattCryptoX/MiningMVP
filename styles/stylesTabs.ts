@@ -61,3 +61,53 @@ export const createHome = (theme: Theme) => {
     },
   });
 };
+
+export const createReferral = (theme: Theme) => {
+  const themeColors = theme === "Dark" ? colors.dark : colors.light;
+
+  return StyleSheet.create({
+    screen: {
+      flex: 1,
+      alignItems: "center",
+      backgroundColor: themeColors.view.secondary,
+    },
+    header: {
+      height: 50,
+      width: "100%",
+      paddingHorizontal: 20,
+      backgroundColor: themeColors.view.secondary,
+    },
+    content: {
+      flex: 1,
+      width: "100%",
+      padding: 10,
+      backgroundColor: themeColors.view.primary,
+    },
+    headerTitle: {
+      fontSize: 25,
+      color: themeColors.accent,
+      fontFamily: fonts.inter.bold,
+    },
+    whiteText: {
+      fontSize: 15,
+      color: themeColors.white,
+    },
+    chipView: {
+      gap: 5,
+      flexDirection: "row",
+      paddingHorizontal: 15,
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: 20,
+      backgroundColor: themeColors.view.tertiary,
+    },
+    chipActive: {
+      fontSize: 15,
+      color: themeColors.accent,
+    },
+    chipIdle: {
+      fontSize: 15,
+      color: themeColors.warning,
+    },
+  });
+};
