@@ -39,6 +39,7 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
 
   useEffect(() => {
     if (user === null) {
+      stopLoading(500);
       return;
     }
 
@@ -48,7 +49,7 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
       setIsLoading(true);
     }
 
-    stopLoading(500);
+    stopLoading(1000);
   }, [isSignedIn, router]);
 
   const handleLogout = async () => {

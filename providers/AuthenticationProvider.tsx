@@ -2,6 +2,7 @@
 import React, { useReducer, useMemo, useContext, createContext } from "react";
 import { Linking, Keyboard } from "react-native";
 
+import { useRouter } from "expo-router";
 import { useSSO, useSignIn, useSignUp } from "@clerk/clerk-expo";
 import { handleNotifier } from "@/components/Widgets/NotificationWidget";
 
@@ -50,6 +51,7 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const { startSSOFlow } = useSSO();
+  const router = useRouter();
   const {
     isLoaded: signInLoaded,
     signIn,
@@ -136,8 +138,8 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
         await signUp.attemptEmailAddressVerification({ code: state.code });
 
       if (status === "complete") {
-        await handleWriteToDatabase(createdUserId || "");
         await signUpSetActive({ session: createdSessionId });
+        await handleWriteToDatabase(createdUserId || "");
         dispatch({ type: "CLEAR_FORM" });
       }
     } catch (error) {
@@ -175,6 +177,7 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
       if (!userSettingsId) throw new Error("Failed to create user settings");
 
       handleNotifier("Verification Success!", "Welcome to STRX!", "success");
+      router.push("/(tabs)");
     } catch (error) {
       console.error("Database Write Error:", error);
       handleNotifier("Database Error", "Failed to save user data.", "error");
@@ -227,6 +230,10 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
     }
   };
 
+  const clearForm = () => {
+    dispatch({ type: "CLEAR_FORM" });
+  };
+
   const contextValue = useMemo(
     () => ({
       state,
@@ -236,6 +243,7 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
       handleVerification,
       handleLogin,
       handleSSO,
+      clearForm,
     }),
     [state],
   );
