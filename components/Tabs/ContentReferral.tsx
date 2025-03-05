@@ -56,12 +56,12 @@ export default function ContentReferral() {
                   {status?.charAt(0).toUpperCase() + status?.slice(1)}{" "}
                 </Text>
                 {status === "idle" ? (
-                  <Bed size={20} weight="fill" color="#ab6f20" />
+                  <Bed size={20} weight={"fill"} color={"#ab6f20"} />
                 ) : (
                   <MaterialCommunityIcons
-                    name="pickaxe"
+                    name={"pickaxe"}
                     size={15}
-                    color="#20AB7D"
+                    color={"#20AB7D"}
                   />
                 )}
               </View>
