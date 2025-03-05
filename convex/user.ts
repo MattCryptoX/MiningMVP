@@ -48,3 +48,27 @@ export const fetchUser = query({
     return { success: true, data: { ...data, photoUrl } };
   },
 });
+
+export const fetchUsers = query({
+  args: {
+    userIds: v.array(v.id("user")),
+  },
+  handler: async (ctx, args) => {
+    const { userIds } = args;
+
+    const users = await Promise.all(
+      userIds.map(async (userId) => {
+        const user = await ctx.db.get(userId);
+        let photoUrl = null;
+
+        if (user?.photo) {
+          photoUrl = await ctx.storage.getUrl(user.photo);
+        }
+
+        return user ? { ...user, photoUrl } : null;
+      }),
+    );
+
+    return { success: true, data: users.filter(Boolean) };
+  },
+});
