@@ -55,13 +55,12 @@ export const useWorkerState = (
         accumulatedEarningsRef.current += earned;
         setEarnedCoins((prev) => parseFloat((prev + earned).toFixed(4)));
 
-        secondsCounterRef.current++; // Persist counter value
+        secondsCounterRef.current++;
 
-        // Update balance every 20 seconds
         if (secondsCounterRef.current >= 30) {
           handleUpdateBalance(accumulatedEarningsRef.current);
-          accumulatedEarningsRef.current = 0; // Reset accumulation
-          secondsCounterRef.current = 0; // Reset counter
+          accumulatedEarningsRef.current = 0;
+          secondsCounterRef.current = 0;
         }
       }
     }, 1000);
