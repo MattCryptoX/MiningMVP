@@ -14,6 +14,7 @@ import ButtonWidget from "@/components/Widgets/ButtonWidget";
 import CardWidget from "@/components/Widgets/CardWidget";
 import RowWidget from "@/components/Widgets/RowWidget";
 import ColumnWidget from "@/components/Widgets/ColumnWidget";
+import TouchableCardWidget from "@/components/Widgets/TouchableCardWidget";
 
 import { CaretRight, Handshake } from "phosphor-react-native";
 
@@ -76,7 +77,7 @@ export default function ContentHome() {
         />
       </CardWidget>
 
-      <CardWidget style={{ width: "90%", marginTop: 20 }} isTouchable={true}>
+      <TouchableCardWidget style={{ width: "90%", marginTop: 20 }}>
         <RowWidget
           style={{
             gap: 20,
@@ -93,7 +94,7 @@ export default function ContentHome() {
 
           <CaretRight size={30} weight={"fill"} color={"#ffffff"} />
         </RowWidget>
-      </CardWidget>
+      </TouchableCardWidget>
     </>
   );
 }
