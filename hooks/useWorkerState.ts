@@ -1,5 +1,5 @@
 // hooks/useWorkerState.ts
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import { Id } from "@/convex/_generated/dataModel";
 
@@ -30,6 +30,9 @@ export const useWorkerState = (
     }
   }, [worker]);
 
+  const secondsCounterRef = useRef(0);
+  const accumulatedEarningsRef = useRef(0);
+
   useEffect(() => {
     if (timeLeft === null || timeLeft <= 0) return;
 
@@ -49,13 +52,22 @@ export const useWorkerState = (
         const ratePerSecond = worker.rate / 3600;
         const earned = parseFloat(ratePerSecond.toFixed(4));
 
-        handleUpdateBalance(earned);
+        accumulatedEarningsRef.current += earned;
         setEarnedCoins((prev) => parseFloat((prev + earned).toFixed(4)));
+
+        secondsCounterRef.current++; // Persist counter value
+
+        // Update balance every 20 seconds
+        if (secondsCounterRef.current >= 30) {
+          handleUpdateBalance(accumulatedEarningsRef.current);
+          accumulatedEarningsRef.current = 0; // Reset accumulation
+          secondsCounterRef.current = 0; // Reset counter
+        }
       }
     }, 1000);
 
-    return () => clearInterval(interval);
-  }, [timeLeft, worker?.rate, earnedCoins]);
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [timeLeft, worker]);
 
   const formattedTimeLeft = timeLeft
     ? new Date(timeLeft).toISOString().substr(11, 8)
