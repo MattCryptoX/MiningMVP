@@ -20,6 +20,12 @@ export const ReferralProvider: React.FC<React.PropsWithChildren> = ({
 }) => {
   const { user } = useUser();
 
+  const referralsQuery = useQuery(
+    api.referral.fetchReferrals,
+    user ? { userId: user?._id } : "skip",
+  );
+  const referrals = referralsQuery?.flattenedIds || null;
+
   const contextValue = useMemo(() => ({}), []);
 
   return (
