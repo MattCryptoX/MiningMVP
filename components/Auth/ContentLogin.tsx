@@ -50,23 +50,23 @@ export default function ContentLogin() {
         <InputWidget
           style={{ width: "100%" }}
           ref={emailRef}
-          label="Email or Username"
+          label={"Email or Username"}
           value={emailAddress}
           onChangeText={(text) =>
             dispatch({ type: "SET_FIELD", field: "emailAddress", value: text })
           }
-          placeholder="johndoe@gmail.com"
+          placeholder={"johndoe@gmail.com"}
           onSubmitEditing={() => passwordRef.current?.focus()}
         />
         <InputWidget
           style={{ width: "100%" }}
           ref={passwordRef}
-          label="Password"
+          label={"Password"}
           value={password}
           onChangeText={(text) =>
             dispatch({ type: "SET_FIELD", field: "password", value: text })
           }
-          placeholder="••••••"
+          placeholder={"••••••"}
           secureTextEntry={hidePassword}
           setSecureTextEntry={() =>
             dispatch({ type: "TOGGLE_PASSWORD_VISIBILITY" })
@@ -76,7 +76,7 @@ export default function ContentLogin() {
         <ButtonWidget
           style={{ width: "100%", marginTop: 15 }}
           isLoading={loading}
-          content="LOGIN"
+          content={"LOGIN"}
           onPress={handleLogin}
         />
 
@@ -99,13 +99,13 @@ export default function ContentLogin() {
       <RowWidget style={{ gap: 25 }}>
         <ButtonWidget
           isLoading={loading}
-          icon="facebook"
+          icon={"facebook"}
           style={{ width: 100 }}
           onPress={() => handleSSO("oauth_facebook")}
         />
         <ButtonWidget
           isLoading={loading}
-          icon="google"
+          icon={"google"}
           style={{ width: 100 }}
           onPress={() => handleSSO("oauth_google")}
         />
