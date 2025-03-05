@@ -13,6 +13,7 @@ import {
 import { useTheme } from "@/providers/ThemeProvider";
 
 import { GoogleLogo, FacebookLogo } from "phosphor-react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface WidgetProps extends TouchableOpacityProps {
   isPrimary?: boolean;
@@ -42,9 +43,13 @@ export default function ButtonWidget({
 
     switch (icon) {
       case "google":
-        return <GoogleLogo size={32} weight={"fill"} color={color} />;
+        return <GoogleLogo size={30} weight={"fill"} color={color} />;
       case "facebook":
-        return <FacebookLogo size={32} weight={"fill"} color={color} />;
+        return <FacebookLogo size={30} weight={"fill"} color={color} />;
+      case "mining":
+        return (
+          <MaterialCommunityIcons name={"pickaxe"} size={25} color={color} />
+        );
       default:
         return null;
     }
