@@ -57,7 +57,7 @@ export default function ContentHome() {
         <RowWidget justifyContent={"space-between"}>
           <ColumnWidget>
             <Text style={styles.title}>EARNINGS</Text>
-            <Text style={styles.content}>{earnedCoins}</Text>
+            <Text style={styles.content}>{earnedCoins.toFixed(4)}</Text>
           </ColumnWidget>
 
           <ColumnWidget>
