@@ -12,7 +12,6 @@ export const createHome = (theme: Theme) => {
   return StyleSheet.create({
     screen: {
       flex: 1,
-      justifyContent: "center",
       alignItems: "center",
       backgroundColor: themeColors.view.primary,
     },
@@ -53,6 +52,12 @@ export const createHome = (theme: Theme) => {
       fontSize: 20,
       color: themeColors.white,
       fontFamily: fonts.inter.bold,
+    },
+    instruction: {
+      flex: 1,
+      textAlign: "center",
+      color: themeColors.white,
+      fontFamily: fonts.inter.medium,
     },
   });
 };

@@ -2,19 +2,28 @@
 import { createCard } from "@/styles/stylesWidget";
 
 import React, { ReactNode } from "react";
-import { View, ViewStyle } from "react-native";
+import { TouchableOpacity, ViewStyle } from "react-native";
 
 import { useTheme } from "@/providers/ThemeProvider";
 
 interface WidgetProps {
   children: ReactNode;
   style?: ViewStyle;
+  isTouchable?: boolean;
 }
 
-export default function CardWidget({ children, style }: WidgetProps) {
+export default function CardWidget({
+  children,
+  style,
+  isTouchable = false,
+}: WidgetProps) {
   const { theme } = useTheme();
 
   const styles = createCard(theme);
 
-  return <View style={[styles.card, style]}>{children}</View>;
+  return (
+    <TouchableOpacity disabled={!isTouchable} style={[styles.card, style]}>
+      {children}
+    </TouchableOpacity>
+  );
 }

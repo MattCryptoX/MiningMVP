@@ -11,16 +11,16 @@ import { useTheme } from "@/providers/ThemeProvider";
 import { useWorker } from "@/providers/WorkerProvider";
 
 import ButtonWidget from "@/components/Widgets/ButtonWidget";
-
 import CardWidget from "@/components/Widgets/CardWidget";
 import RowWidget from "@/components/Widgets/RowWidget";
 import ColumnWidget from "@/components/Widgets/ColumnWidget";
 
+import { CaretRight, Handshake } from "phosphor-react-native";
+
 export default function ContentHome() {
   const { theme } = useTheme();
   const { user } = useUser();
-  const { worker, handleStartMining, formattedTimeLeft, earnedCoins } =
-    useWorker();
+  const { worker, handleStartMining, formattedTimeLeft } = useWorker();
 
   const styles = createHome(theme);
 
@@ -74,6 +74,25 @@ export default function ContentHome() {
           disabled={worker}
           onPress={() => handleStartMining(user?._id)}
         />
+      </CardWidget>
+
+      <CardWidget style={{ width: "90%", marginTop: 20 }} isTouchable={true}>
+        <RowWidget
+          style={{
+            gap: 20,
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Handshake size={30} weight={"fill"} color={"#20AB7D"} />
+
+          <Text style={styles.instruction} numberOfLines={2}>
+            Earn 0.05x multiplier for each referral who actively mines!
+          </Text>
+
+          <CaretRight size={30} weight={"fill"} color={"#ffffff"} />
+        </RowWidget>
       </CardWidget>
     </>
   );
