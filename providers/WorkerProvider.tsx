@@ -1,11 +1,18 @@
 // Worker/WorkerProvider.tsx
-import React, { useEffect, useMemo, useContext, createContext } from "react";
+import React, {
+  useMemo,
+  useState,
+  useEffect,
+  useContext,
+  createContext,
+} from "react";
 import { AppState } from "react-native";
 
 import BackgroundService from "react-native-background-actions";
 
 import { useUser } from "@/providers/UserProvider";
 import { useWorkerState } from "@/hooks/useWorkerState";
+import { useReferral } from "@/providers/ReferralProvider";
 
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -34,16 +41,43 @@ export const WorkerProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { user } = useUser();
+  const { miningCount } = useReferral();
 
   const createWorker = useMutation(api.worker.createWorker);
+  const updateWorker = useMutation(api.worker.updateWorker);
   const deleteWorker = useMutation(api.worker.deleteWorker);
   const updateUser = useMutation(api.user.updateUser);
+
+  const [lastMiningCount, setLastMiningCount] = useState(miningCount);
 
   const workerQuery = useQuery(
     api.worker.fetchWorker,
     user ? { userId: user?._id } : "skip",
   );
   const worker = ((workerQuery?.data || null) as Worker) || null;
+
+  useEffect(() => {
+    if (!worker || miningCount === undefined) return;
+
+    if (miningCount !== lastMiningCount) {
+      const newRate = 1 + miningCount * 0.05;
+
+      const updateWorkerRate = async () => {
+        try {
+          await updateWorker({
+            workerId: worker._id as Id<"worker">,
+            updates: { rate: newRate },
+          });
+
+          setLastMiningCount(miningCount);
+        } catch (error) {
+          console.error("Failed to update worker rate:", error);
+        }
+      };
+
+      updateWorkerRate();
+    }
+  }, [miningCount, worker]);
 
   const handleStartMining = async (userId: Id<"user">) => {
     await createWorker({ userId, rate: 1 });

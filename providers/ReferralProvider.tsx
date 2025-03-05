@@ -1,6 +1,7 @@
 import React, { useMemo, useContext, createContext } from "react";
 
 import { useUser } from "@/providers/UserProvider";
+import { useWorker } from "@/providers/WorkerProvider";
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -37,7 +38,7 @@ export const ReferralProvider: React.FC<React.PropsWithChildren> = ({
     return new Map(workers?.map((worker) => [worker.userId, worker]) || []);
   }, [workers]);
 
-  const finalUsers = useMemo(() => {
+  const referee = useMemo(() => {
     return (
       users?.map((user) => ({
         ...user,
@@ -46,7 +47,20 @@ export const ReferralProvider: React.FC<React.PropsWithChildren> = ({
     );
   }, [users, workerMap]);
 
-  const contextValue = useMemo(() => ({ finalUsers }), [finalUsers]);
+  const miningCount = useMemo(
+    () => referee.filter((user) => user.status === "mining").length,
+    [referee],
+  );
+
+  const idleCount = useMemo(
+    () => referee.filter((user) => user.status === "idle").length,
+    [referee],
+  );
+
+  const contextValue = useMemo(
+    () => ({ referee, miningCount, idleCount }),
+    [referee, miningCount, idleCount],
+  );
 
   return (
     <ReferralContext.Provider value={contextValue}>
