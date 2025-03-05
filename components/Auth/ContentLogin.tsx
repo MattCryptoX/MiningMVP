@@ -23,55 +23,64 @@ import RowWidget from "@/components/Widgets/RowWidget";
 export default function ContentLogin() {
   const { theme } = useTheme();
   const router = useRouter();
-  const { state, actions, handleUrl, clearForm, handleLogin, handleSSO } =
+  const { state, dispatch, handleUrl, clearForm, handleLogin, handleSSO } =
     useAuthentication();
 
   const styles = createAuth(theme);
 
   const { emailAddress, password, loading, hidePassword } = state;
-  const { setEmailAddress, setPassword, setHidePassword } = actions;
 
-  const emailRef = useRef<TextInput>(null);
-  const passwordRef = useRef<TextInput>(null);
+  // Input Refs
+  const emailRef = useRef<TextInput | null>(null);
+  const passwordRef = useRef<TextInput | null>(null);
 
   return (
     <KeyboardAvoidingView
       style={[styles.screen, { paddingHorizontal: 20 }]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      {/* Logo */}
       <Image
         source={require("@/assets/images/strx.png")}
         style={{ width: 125, height: 125 }}
       />
 
+      {/* Login Form */}
       <ColumnWidget style={{ width: "100%", gap: 15, paddingHorizontal: 20 }}>
         <InputWidget
           style={{ width: "100%" }}
           ref={emailRef}
-          label={"Email or Username"}
+          label="Email or Username"
           value={emailAddress}
-          onChangeText={setEmailAddress}
-          placeholder={"johndoe@gmail.com"}
+          onChangeText={(text) =>
+            dispatch({ type: "SET_FIELD", field: "emailAddress", value: text })
+          }
+          placeholder="johndoe@gmail.com"
           onSubmitEditing={() => passwordRef.current?.focus()}
         />
         <InputWidget
           style={{ width: "100%" }}
           ref={passwordRef}
-          label={"Password"}
+          label="Password"
           value={password}
-          onChangeText={setPassword}
-          placeholder={"••••••"}
+          onChangeText={(text) =>
+            dispatch({ type: "SET_FIELD", field: "password", value: text })
+          }
+          placeholder="••••••"
           secureTextEntry={hidePassword}
-          setSecureTextEntry={setHidePassword}
+          setSecureTextEntry={() =>
+            dispatch({ type: "TOGGLE_PASSWORD_VISIBILITY" })
+          }
           onSubmitEditing={handleLogin}
         />
         <ButtonWidget
           style={{ width: "100%", marginTop: 15 }}
           isLoading={loading}
-          content={"LOGIN"}
+          content="LOGIN"
           onPress={handleLogin}
         />
 
+        {/* Signup Link */}
         <RowWidget style={{ gap: 5 }}>
           <Text style={styles.textWhite}>Not a member?</Text>
           <TouchableOpacity
@@ -86,22 +95,23 @@ export default function ContentLogin() {
         </RowWidget>
       </ColumnWidget>
 
+      {/* Social Login Buttons */}
       <RowWidget style={{ gap: 25 }}>
         <ButtonWidget
           isLoading={loading}
-          icon={"facebook"}
+          icon="facebook"
           style={{ width: 100 }}
           onPress={() => handleSSO("oauth_facebook")}
         />
-
         <ButtonWidget
           isLoading={loading}
-          icon={"google"}
+          icon="google"
           style={{ width: 100 }}
           onPress={() => handleSSO("oauth_google")}
         />
       </RowWidget>
 
+      {/* Terms of Service */}
       <ColumnWidget style={{ width: "100%", gap: 5, paddingHorizontal: 20 }}>
         <Text style={styles.textWhite}>
           By using Strx, you are agreeing to our

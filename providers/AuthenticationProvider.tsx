@@ -1,9 +1,8 @@
 // Auth/AuthenticationProvider.tsx
-import React, { useMemo, useState, useContext, createContext } from "react";
+import React, { useReducer, useMemo, useContext, createContext } from "react";
 import { Linking, Keyboard } from "react-native";
 
 import { useSSO, useSignIn, useSignUp } from "@clerk/clerk-expo";
-
 import { handleNotifier } from "@/components/Widgets/NotificationWidget";
 
 import type { OAuthStrategy } from "@clerk/types";
@@ -19,6 +18,33 @@ const PASSWORD_REGEX =
   /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 const AuthenticationContext = createContext<any>(undefined);
+
+const initialState = {
+  username: "",
+  emailAddress: "",
+  password: "",
+  code: "",
+  loading: false,
+  hidePassword: true,
+  isVerification: false,
+};
+
+const authReducer = (state: typeof initialState, action: any) => {
+  switch (action.type) {
+    case "SET_FIELD":
+      return { ...state, [action.field]: action.value };
+    case "SET_LOADING":
+      return { ...state, loading: action.value };
+    case "TOGGLE_PASSWORD_VISIBILITY":
+      return { ...state, hidePassword: !state.hidePassword };
+    case "SET_VERIFICATION":
+      return { ...state, isVerification: action.value };
+    case "CLEAR_FORM":
+      return { ...initialState };
+    default:
+      return state;
+  }
+};
 
 export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
   children,
@@ -38,24 +64,9 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
   const createUser = useMutation(api.user.createUser);
   const createUserSettings = useMutation(api.userSettings.createUserSettings);
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [hidePassword, setHidePassword] = useState<boolean>(true);
-  const [isVerification, setIsVerification] = useState<boolean>(false);
+  const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const [username, setUsername] = useState<string>("");
-  const [emailAddress, setEmailAddress] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [code, setCode] = useState<string>("");
-
-  const handleUrl = (url: string) => {
-    Linking.openURL(url);
-  };
-
-  const clearForm = () => {
-    setEmailAddress("");
-    setUsername("");
-    setPassword("");
-  };
+  const handleUrl = (url: string) => Linking.openURL(url);
 
   const validateInputs = (email: string, password: string) => {
     if (!EMAIL_REGEX.test(email)) {
@@ -64,7 +75,7 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
         "Please enter a valid email format.",
         "error",
       );
-      return { success: false };
+      return false;
     }
 
     if (!PASSWORD_REGEX.test(password)) {
@@ -73,83 +84,80 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
         "Password must be at least 8 characters long, include one uppercase letter, one number, and one special character.",
         "error",
       );
-      return { success: false };
+      return false;
     }
 
-    return { success: true };
+    return true;
   };
 
   const handleRegister = async () => {
     if (!signUpLoaded) return;
-
     Keyboard.dismiss();
 
-    const { success } = validateInputs(emailAddress.trim(), password.trim());
-    if (!success) return;
+    if (!validateInputs(state.emailAddress.trim(), state.password.trim()))
+      return;
 
-    setLoading(true);
+    dispatch({ type: "SET_LOADING", value: true });
 
     try {
       await signUp.create({
-        emailAddress: emailAddress.trim(),
-        username: username.trim(),
-        password: password.trim(),
+        emailAddress: state.emailAddress.trim(),
+        username: state.username.trim(),
+        password: state.password.trim(),
       });
 
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
 
       handleNotifier(
         "Registration Success!",
-        "Please check your email for the verification code to complete registration.",
+        "Check your email for the verification code.",
         "success",
       );
-
-      setIsVerification(true);
+      dispatch({ type: "SET_VERIFICATION", value: true });
     } catch (error) {
       handleNotifier(
-        "Registration Failed.",
+        "Registration Failed",
         "Sorry! Account already taken. Please try again.",
         "error",
       );
     } finally {
-      setLoading(false);
+      dispatch({ type: "SET_LOADING", value: false });
     }
   };
 
   const handleVerification = async () => {
     if (!signUpLoaded) return;
-
     Keyboard.dismiss();
-    setLoading(true);
+
+    dispatch({ type: "SET_LOADING", value: true });
 
     try {
       const { status, createdSessionId, createdUserId } =
-        await signUp.attemptEmailAddressVerification({ code });
+        await signUp.attemptEmailAddressVerification({ code: state.code });
 
       if (status === "complete") {
         await handleWriteToDatabase(createdUserId || "");
         await signUpSetActive({ session: createdSessionId });
-        clearForm();
-        return;
+        dispatch({ type: "CLEAR_FORM" });
       }
     } catch (error) {
       handleNotifier(
         "Verification Failed",
-        "Sorry! An error occurred. Please try again.",
+        "An error occurred. Please try again.",
         "error",
       );
       console.error("Verification Error:", error);
     } finally {
-      setLoading(false);
+      dispatch({ type: "SET_LOADING", value: false });
     }
   };
 
   const handleWriteToDatabase = async (clerkId: string) => {
     try {
       const userPayload = {
-        clerkId: clerkId || "",
-        email: emailAddress.trim(),
-        username: username.trim(),
+        clerkId,
+        email: state.emailAddress.trim(),
+        username: state.username.trim(),
         balance: 0,
       };
 
@@ -175,29 +183,27 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
 
   const handleLogin = async () => {
     if (!signInLoaded) return;
-
     Keyboard.dismiss();
-    setLoading(true);
+
+    dispatch({ type: "SET_LOADING", value: true });
 
     try {
       const { status, createdSessionId } = await signIn.create({
-        identifier: emailAddress.trim(),
-        password: password.trim(),
+        identifier: state.emailAddress.trim(),
+        password: state.password.trim(),
       });
 
       if (status === "complete") {
         handleNotifier(
           "Sign In Success!",
-          "Welcome to Tipun! Please enjoy your stay.",
+          "Welcome to Tipun! Enjoy your stay.",
           "success",
         );
-
         await signInSetActive({ session: createdSessionId });
-        clearForm();
-        return;
+        dispatch({ type: "CLEAR_FORM" });
+      } else {
+        throw new Error("Sign In Failed");
       }
-
-      throw new Error("Sign In Failed");
     } catch (error) {
       handleNotifier(
         "Sign In Failed!",
@@ -205,7 +211,7 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
         "error",
       );
     } finally {
-      setLoading(false);
+      dispatch({ type: "SET_LOADING", value: false });
     }
   };
 
@@ -216,64 +222,22 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
       if (createdSessionId) {
         setActive!({ session: createdSessionId });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("SSO Error:", error);
+    }
   };
-
-  const state = useMemo(
-    () => ({
-      username,
-      emailAddress,
-      password,
-      code,
-      loading,
-      hidePassword,
-      isVerification,
-    }),
-    [
-      username,
-      emailAddress,
-      password,
-      code,
-      loading,
-      hidePassword,
-      isVerification,
-    ],
-  );
-
-  const actions = useMemo(
-    () => ({
-      setUsername,
-      setEmailAddress,
-      setPassword,
-      setCode,
-      setLoading,
-      setHidePassword,
-      setIsVerification,
-    }),
-    [],
-  );
 
   const contextValue = useMemo(
     () => ({
       state,
-      actions,
+      dispatch,
       handleUrl,
-      clearForm,
       handleRegister,
       handleVerification,
       handleLogin,
       handleSSO,
     }),
-    [
-      state,
-      actions,
-      handleUrl,
-      clearForm,
-      handleRegister,
-      handleVerification,
-      handleLogin,
-      handleSSO,
-    ],
+    [state],
   );
 
   return (
@@ -287,7 +251,7 @@ export const useAuthentication = () => {
   const context = useContext(AuthenticationContext);
   if (!context) {
     throw new Error(
-      "useAuthentication must be used within a AuthenticationProvider",
+      "useAuthentication must be used within an AuthenticationProvider",
     );
   }
   return context;
