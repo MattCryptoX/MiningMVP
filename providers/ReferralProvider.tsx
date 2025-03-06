@@ -1,20 +1,51 @@
-import React, { useMemo, useContext, createContext } from "react";
+import React, { useMemo, useContext, createContext, useReducer } from "react";
 
 import { useUser } from "@/providers/UserProvider";
-import { useWorker } from "@/providers/WorkerProvider";
 
-import { useQuery } from "convex/react";
+import * as Clipboard from "expo-clipboard";
+
+import { handleNotifier } from "@/components/Widgets/NotificationWidget";
+
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 import { User } from "@/types/user";
 import { Worker } from "@/types/worker";
 
 const ReferralContext = createContext<any>(undefined);
 
+const referralReducer = (
+  state: { code: string; mode: "Share" | "Input" },
+  action: { type: string; payload?: string },
+) => {
+  switch (action.type) {
+    case "SET_CODE":
+      return { ...state, code: action.payload || "" };
+    case "CLEAR_CODE":
+      return { ...state, code: "" };
+    case "SET_MODE":
+      return {
+        ...state,
+        mode: (action.payload as "Share" | "Input") || "Share",
+      };
+    default:
+      return state;
+  }
+};
+
 export const ReferralProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const { user } = useUser();
+
+  const createReferral = useMutation(api.referral.createReferral);
+
+  // Using useReducer instead of useState for both `code` and `mode`
+  const [state, dispatch] = useReducer(referralReducer, {
+    code: "",
+    mode: "Share",
+  });
 
   const referralsQuery = useQuery(
     api.referral.fetchReferrals,
@@ -57,9 +88,48 @@ export const ReferralProvider: React.FC<React.PropsWithChildren> = ({
     [referee],
   );
 
+  const handleCopyToClipboard = async (userCode: string) => {
+    if (!userCode) return;
+
+    await Clipboard.setStringAsync(userCode);
+  };
+
+  const handleCreateReferral = async (userId: Id<"user">) => {
+    if (!state.code) return;
+
+    const result = await createReferral({
+      referrerId: userId,
+      refereeCode: state.code,
+    });
+
+    if (result.success) {
+      handleNotifier(
+        "Referral Success",
+        "The referral code has been successfully linked to your account.",
+        "success",
+      );
+      dispatch({ type: "CLEAR_CODE" });
+    } else {
+      handleNotifier(
+        "Referral Failed",
+        "Invalid or duplicate referral code. Please enter a valid one.",
+        "error",
+      );
+      dispatch({ type: "CLEAR_CODE" });
+    }
+  };
+
   const contextValue = useMemo(
-    () => ({ referee, miningCount, idleCount }),
-    [referee, miningCount, idleCount],
+    () => ({
+      state,
+      dispatch,
+      referee,
+      miningCount,
+      idleCount,
+      handleCopyToClipboard,
+      handleCreateReferral,
+    }),
+    [state, referee, miningCount, idleCount],
   );
 
   return (
