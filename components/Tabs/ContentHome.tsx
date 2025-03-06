@@ -38,8 +38,8 @@ export default function ContentHome() {
   return (
     <>
       <LottieView
-        autoPlay
         ref={animation}
+        autoPlay={false}
         style={styles.lottie}
         source={require("@/assets/animation/mine.json")}
       />
