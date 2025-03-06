@@ -41,9 +41,8 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
 
   // TODO: Test in logout
   useEffect(() => {
-    if (!isSignedIn || user === null) {
-      return;
-    }
+    if (!user && !isSignedIn) return;
+    if (!user && isSignedIn) return;
 
     if (!hasNavigated.current && user?._id) {
       hasNavigated.current = true;
