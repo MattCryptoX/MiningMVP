@@ -39,10 +39,9 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
     }, delay);
   };
 
+  // TODO: Test in logout
   useEffect(() => {
-    if (!isSignedIn) return;
-
-    if (user === null) {
+    if (!isSignedIn || user === null) {
       return;
     }
 
