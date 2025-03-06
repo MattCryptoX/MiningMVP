@@ -25,7 +25,7 @@ export default function ContentReferral() {
   if (!referee.length) {
     return (
       <SafeAreaView style={[styles.content, { alignItems: "center" }]}>
-        <Text style={styles.unknownText}>No Referrals Found.</Text>
+        <Text style={styles.unknownText}>No Referrals Found</Text>
       </SafeAreaView>
     );
   }
