@@ -6,5 +6,6 @@ export type User = {
   clerkId: string;
   username: string;
   balance: number;
+  code: string;
   photos?: string;
 };

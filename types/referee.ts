@@ -8,5 +8,6 @@ export type Referee = {
   username: string;
   balance: number;
   photo: string;
+  code: string;
   status: string;
 };
