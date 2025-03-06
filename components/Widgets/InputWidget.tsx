@@ -18,6 +18,7 @@ import RowWidget from "@/components/Widgets/RowWidget";
 import { Eye, EyeSlash } from "phosphor-react-native";
 
 interface WidgetProps {
+  variant?: "Normal" | "Special";
   isPrimary?: boolean;
   style?: ViewStyle;
   label?: string;
@@ -35,6 +36,7 @@ interface WidgetProps {
 const InputWidget = forwardRef<TextInput, WidgetProps>(
   (
     {
+      variant = "Normal",
       isPrimary = false,
       style,
       label,
@@ -56,10 +58,12 @@ const InputWidget = forwardRef<TextInput, WidgetProps>(
 
     return (
       <View style={[{ gap: 10 }, style]}>
-        <RowWidget>
-          {label && <Text style={styles.label}>{label}</Text>}
-          {required && <Text style={styles.asterisk}>*</Text>}
-        </RowWidget>
+        {label || required ? (
+          <RowWidget>
+            {label && <Text style={styles.label}>{label}</Text>}
+            {required && <Text style={styles.asterisk}>*</Text>}
+          </RowWidget>
+        ) : null}
 
         <View
           style={[
@@ -73,12 +77,12 @@ const InputWidget = forwardRef<TextInput, WidgetProps>(
             onChangeText={onChangeText}
             editable={editable}
             placeholder={placeholder}
-            placeholderTextColor={"#a9afbd"}
+            placeholderTextColor={"gray"}
             keyboardType={keyboardType}
             autoCapitalize={"none"}
             secureTextEntry={setSecureTextEntry && secureTextEntry}
             onSubmitEditing={onSubmitEditing}
-            style={styles.input}
+            style={variant === "Special" ? styles.inputSpecial : styles.input}
           />
 
           {setSecureTextEntry && (
