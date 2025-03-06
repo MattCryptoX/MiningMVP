@@ -26,7 +26,7 @@ import { Referee } from "@/types/referee";
 
 export default function ContentReferral() {
   const { user } = useUser();
-  const { theme } = useTheme();
+  const { theme, translations } = useTheme();
   const {
     state,
     dispatch,
@@ -55,7 +55,7 @@ export default function ContentReferral() {
               onChangeText={(text) =>
                 dispatch({ type: "SET_CODE", payload: text })
               }
-              placeholder={"Input Referral Code"}
+              placeholder={translations.network.content.placeholder}
             />
 
             <TouchableOpacity
@@ -117,12 +117,14 @@ export default function ContentReferral() {
                 <View style={styles.chipView}>
                   <Text
                     style={
-                      status === "idle" ? styles.chipIdle : styles.chipActive
+                      status === `${translations.network.content.idle}`
+                        ? styles.chipIdle
+                        : styles.chipActive
                     }
                   >
                     {status?.charAt(0).toUpperCase() + status?.slice(1)}
                   </Text>
-                  {status === "idle" ? (
+                  {status === `${translations.network.content.idle}` ? (
                     <Bed size={20} weight={"fill"} color={"#ab6f20"} />
                   ) : (
                     <MaterialCommunityIcons
@@ -142,7 +144,9 @@ export default function ContentReferral() {
           justifyContent={"center"}
         >
           <UserCircleDashed size={200} weight={"fill"} color={"#20AB7D"} />
-          <Text style={styles.unknownText}>No Referrals Found</Text>
+          <Text style={styles.unknownText}>
+            {translations.network.content.unknown}
+          </Text>
         </ColumnWidget>
       )}
     </ScrollView>

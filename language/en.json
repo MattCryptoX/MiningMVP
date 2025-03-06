@@ -1,0 +1,70 @@
+{
+  "auth": {
+    "login": {
+      "guideOne": "Not a member?",
+      "guideTwo": "By using Strx, you are agreeing to our",
+      "link": "Sign Up",
+      "terms": "Terms of Service",
+      "login": "LOGIN",
+      "labelOne": "Email or Username",
+      "labelTwo": "Password"
+    },
+    "register": {
+      "guideOne": "Already have an account?",
+      "guideTwo": "By using Strx, you are agreeing to our",
+      "link": "Sign In",
+      "terms": "Terms of Service",
+      "verify": "VERIFY",
+      "register": "REGISTER",
+      "labelOne": "Username",
+      "labelTwo": "Email",
+      "labelThree": "Password",
+      "labelFour": "One Time Password"
+    },
+    "notifier": {
+      "invalidEmail": "Invalid Email Address",
+      "invalidEmailContent": "Please enter a valid email format.",
+      "invalidPassword": "Invalid Password",
+      "invalidPasswordContent": "Password must be at least 8 characters long, include one uppercase letter, one number, and one special character.",
+      "successRegistration": "Registration Success!",
+      "successRegistrationContent": "Check your email for the verification code.",
+      "failedRegistration": "Registration Failed",
+      "failedRegistrationContent": "Sorry! Account already taken. Please try again.",
+      "successVerification": "Verification Success!",
+      "successVerificationContent": "Welcome to STRX!",
+      "failedVerification": "Verification Failed",
+      "failedVerificationContent": "An error occurred. Please try again.",
+      "database": "Database Error",
+      "databaseContent": "Failed to save user data.",
+      "successLogin": "Sign In Success!",
+      "successLoginContent": "Welcome to STRX! Enjoy your stay.",
+      "failedLogin": "Sign In Failed!",
+      "failedLoginContent": "Invalid Email / Password. Please try again."
+    }
+  },
+  "home": {
+    "content": {
+      "time": "TIME LEFT",
+      "multiplier": "MULTIPLIER",
+      "handshake": "Earn 0.05x multiplier for each referral who actively mines!",
+      "mining": "START MINING"
+    }
+  },
+  "network": {
+    "header": {
+      "title": "Referrals"
+    },
+    "content": {
+      "unknown": "No Referrals Found",
+      "placeholder": "Input Referral Code",
+      "idle": "idle",
+      "mining": "mining"
+    },
+    "notifier": {
+      "success": "Referral Success",
+      "fail": "Referral Failed",
+      "successContent": "The referral code has been successfully linked to your account.",
+      "failContent": "Invalid or duplicate referral code. Please enter a valid one."
+    }
+  }
+}

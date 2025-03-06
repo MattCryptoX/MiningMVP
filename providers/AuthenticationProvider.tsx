@@ -3,17 +3,20 @@ import React, { useReducer, useMemo, useContext, createContext } from "react";
 import { Linking, Keyboard } from "react-native";
 
 import { useRouter } from "expo-router";
+import { useTheme } from "@/providers/ThemeProvider";
 import { useSSO, useSignIn, useSignUp } from "@clerk/clerk-expo";
+
 import { handleNotifier } from "@/components/Widgets/NotificationWidget";
 
-import type { OAuthStrategy } from "@clerk/types";
+import { hashId } from "@/hooks/useReferral";
 
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
 import { Theme } from "@/types/settings";
-import { hashId } from "@/hooks/useReferral";
+
+import type { OAuthStrategy } from "@clerk/types";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_REGEX =
@@ -51,6 +54,7 @@ const authReducer = (state: typeof initialState, action: any) => {
 export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
+  const { translations } = useTheme();
   const { startSSOFlow } = useSSO();
   const router = useRouter();
   const {
@@ -74,8 +78,8 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
   const validateInputs = (email: string, password: string) => {
     if (!EMAIL_REGEX.test(email)) {
       handleNotifier(
-        "Invalid Email Address",
-        "Please enter a valid email format.",
+        `${translations.auth.notifier.invalidEmail}`,
+        `${translations.auth.notifier.invalidEmailContent}`,
         "error",
       );
       return false;
@@ -83,8 +87,8 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
 
     if (!PASSWORD_REGEX.test(password)) {
       handleNotifier(
-        "Invalid Password",
-        "Password must be at least 8 characters long, include one uppercase letter, one number, and one special character.",
+        `${translations.auth.notifier.invalidPassword}`,
+        `${translations.auth.notifier.invalidPasswordContent}`,
         "error",
       );
       return false;
@@ -112,15 +116,15 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
 
       handleNotifier(
-        "Registration Success!",
-        "Check your email for the verification code.",
+        `${translations.auth.notifier.successRegistration}`,
+        `${translations.auth.notifier.successRegistrationContent}`,
         "success",
       );
       dispatch({ type: "SET_VERIFICATION", value: true });
     } catch (error) {
       handleNotifier(
-        "Registration Failed",
-        "Sorry! Account already taken. Please try again.",
+        `${translations.auth.notifier.failedRegistration}`,
+        `${translations.auth.notifier.failedRegistrationContent}`,
         "error",
       );
     } finally {
@@ -145,11 +149,10 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
       }
     } catch (error) {
       handleNotifier(
-        "Verification Failed",
-        "An error occurred. Please try again.",
+        `${translations.auth.notifier.failedVerification}`,
+        `${translations.auth.notifier.failedVerificationContent}`,
         "error",
       );
-      console.error("Verification Error:", error);
     } finally {
       dispatch({ type: "SET_LOADING", value: false });
     }
@@ -178,11 +181,19 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
         await createUserSettings(userSettingsPayload);
       if (!userSettingsId) throw new Error("Failed to create user settings");
 
-      handleNotifier("Verification Success!", "Welcome to STRX!", "success");
+      handleNotifier(
+        `${translations.auth.notifier.successVerification}`,
+        `${translations.auth.notifier.successVerificationContent}`,
+        "success",
+      );
       router.push("/(tabs)");
     } catch (error) {
       console.error("Database Write Error:", error);
-      handleNotifier("Database Error", "Failed to save user data.", "error");
+      handleNotifier(
+        `${translations.auth.notifier.database}`,
+        `${translations.auth.notifier.databaseContent}`,
+        "error",
+      );
     }
   };
 
@@ -200,8 +211,8 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
 
       if (status === "complete") {
         handleNotifier(
-          "Sign In Success!",
-          "Welcome to Tipun! Enjoy your stay.",
+          `${translations.auth.notifier.successLogin}`,
+          `${translations.auth.notifier.successLoginContent}`,
           "success",
         );
         await signInSetActive({ session: createdSessionId });
@@ -211,8 +222,8 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
       }
     } catch (error) {
       handleNotifier(
-        "Sign In Failed!",
-        "Invalid Email / Password. Please try again.",
+        `${translations.auth.notifier.failedLogin}`,
+        `${translations.auth.notifier.failedLoginContent}`,
         "error",
       );
     } finally {

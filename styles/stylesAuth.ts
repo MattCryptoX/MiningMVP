@@ -2,11 +2,9 @@
 import { fonts } from "@/styles/fonts";
 import { colors } from "@/styles/colors";
 
-import { Dimensions, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { Theme } from "@/types/settings";
-
-const { width } = Dimensions.get("window");
 
 export const createAuth = (theme: Theme) => {
   const themeColors = theme === "Dark" ? colors.dark : colors.light;

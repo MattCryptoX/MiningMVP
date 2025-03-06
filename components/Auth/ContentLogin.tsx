@@ -21,7 +21,7 @@ import ButtonWidget from "@/components/Widgets/ButtonWidget";
 import RowWidget from "@/components/Widgets/RowWidget";
 
 export default function ContentLogin() {
-  const { theme } = useTheme();
+  const { theme, translations } = useTheme();
   const router = useRouter();
   const { state, dispatch, handleUrl, clearForm, handleLogin, handleSSO } =
     useAuthentication();
@@ -30,7 +30,6 @@ export default function ContentLogin() {
 
   const { emailAddress, password, loading, hidePassword } = state;
 
-  // Input Refs
   const emailRef = useRef<TextInput | null>(null);
   const passwordRef = useRef<TextInput | null>(null);
 
@@ -39,18 +38,16 @@ export default function ContentLogin() {
       style={[styles.screen, { paddingHorizontal: 20 }]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      {/* Logo */}
       <Image
         source={require("@/assets/images/strx.png")}
         style={{ width: 125, height: 125 }}
       />
 
-      {/* Login Form */}
       <ColumnWidget style={{ width: "100%", gap: 15, paddingHorizontal: 20 }}>
         <InputWidget
           style={{ width: "100%" }}
           ref={emailRef}
-          label={"Email or Username"}
+          label={translations.auth.login.labelOne}
           value={emailAddress}
           onChangeText={(text) =>
             dispatch({ type: "SET_FIELD", field: "emailAddress", value: text })
@@ -61,7 +58,7 @@ export default function ContentLogin() {
         <InputWidget
           style={{ width: "100%" }}
           ref={passwordRef}
-          label={"Password"}
+          label={translations.auth.login.labelTwo}
           value={password}
           onChangeText={(text) =>
             dispatch({ type: "SET_FIELD", field: "password", value: text })
@@ -76,13 +73,14 @@ export default function ContentLogin() {
         <ButtonWidget
           style={{ width: "100%", marginTop: 15 }}
           isLoading={loading}
-          content={"LOGIN"}
+          content={translations.auth.login.login}
           onPress={handleLogin}
         />
 
-        {/* Signup Link */}
         <RowWidget style={{ gap: 5 }}>
-          <Text style={styles.textWhite}>Not a member?</Text>
+          <Text style={styles.textWhite}>
+            {translations.auth.login.guideOne}
+          </Text>
           <TouchableOpacity
             disabled={loading}
             onPress={() => {
@@ -90,12 +88,13 @@ export default function ContentLogin() {
               router.push("/register");
             }}
           >
-            <Text style={styles.textPrimary}>Sign Up</Text>
+            <Text style={styles.textPrimary}>
+              {translations.auth.login.link}
+            </Text>
           </TouchableOpacity>
         </RowWidget>
       </ColumnWidget>
 
-      {/* Social Login Buttons */}
       <RowWidget style={{ gap: 25 }}>
         <ButtonWidget
           isLoading={loading}
@@ -113,11 +112,11 @@ export default function ContentLogin() {
 
       {/* Terms of Service */}
       <ColumnWidget style={{ width: "100%", gap: 5, paddingHorizontal: 20 }}>
-        <Text style={styles.textWhite}>
-          By using Strx, you are agreeing to our
-        </Text>
+        <Text style={styles.textWhite}>{translations.auth.login.guideTwo}</Text>
         <TouchableOpacity onPress={handleUrl}>
-          <Text style={styles.textPrimary}>Terms of Service</Text>
+          <Text style={styles.textPrimary}>
+            {translations.auth.login.terms}
+          </Text>
         </TouchableOpacity>
       </ColumnWidget>
     </KeyboardAvoidingView>

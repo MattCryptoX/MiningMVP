@@ -19,8 +19,8 @@ import TouchableCardWidget from "@/components/Widgets/TouchableCardWidget";
 import { CaretRight, Handshake } from "phosphor-react-native";
 
 export default function ContentHome() {
-  const { theme } = useTheme();
   const { user } = useUser();
+  const { theme, translations } = useTheme();
   const { worker, handleStartMining, formattedTimeLeft } = useWorker();
 
   const styles = createHome(theme);
@@ -56,12 +56,14 @@ export default function ContentHome() {
 
         <RowWidget justifyContent={"space-evenly"}>
           <ColumnWidget>
-            <Text style={styles.title}>TIME LEFT</Text>
+            <Text style={styles.title}>{translations.home.content.time}</Text>
             <Text style={styles.content}>{formattedTimeLeft}</Text>
           </ColumnWidget>
 
           <ColumnWidget>
-            <Text style={styles.title}>MULTIPLIER</Text>
+            <Text style={styles.title}>
+              {translations.home.content.multiplier}
+            </Text>
             <Text style={styles.content}>
               {worker?.rate?.toFixed(2) || 1.0}
             </Text>
@@ -71,7 +73,7 @@ export default function ContentHome() {
         <ButtonWidget
           style={{ width: "100%" }}
           icon={"mining"}
-          content={"START MINING"}
+          content={translations.home.content.mining}
           disabled={worker}
           onPress={() => handleStartMining(user?._id)}
         />
@@ -89,7 +91,7 @@ export default function ContentHome() {
           <Handshake size={30} weight={"fill"} color={"#20AB7D"} />
 
           <Text style={styles.instruction} numberOfLines={2}>
-            Earn 0.05x multiplier for each referral who actively mines!
+            {translations.home.content.handshake}
           </Text>
 
           <CaretRight size={30} weight={"fill"} color={"#ffffff"} />

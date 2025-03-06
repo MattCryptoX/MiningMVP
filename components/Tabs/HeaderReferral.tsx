@@ -12,14 +12,16 @@ import RowWidget from "@/components/Widgets/RowWidget";
 import { ShareNetwork, UserPlus } from "phosphor-react-native";
 
 export default function HeaderReferral() {
-  const { theme } = useTheme();
+  const { theme, translations } = useTheme();
   const { state, dispatch } = useReferral();
 
   const styles = createReferral(theme);
 
   return (
     <RowWidget style={styles.header} justifyContent={"space-between"}>
-      <Text style={styles.headerTitle}>Referrals</Text>
+      <Text style={styles.headerTitle}>
+        {translations.network.header.title}
+      </Text>
 
       <TouchableOpacity
         onPress={() =>

@@ -1,6 +1,7 @@
 import React, { useMemo, useContext, createContext, useReducer } from "react";
 
 import { useUser } from "@/providers/UserProvider";
+import { useTheme } from "@/providers/ThemeProvider";
 
 import * as Clipboard from "expo-clipboard";
 
@@ -38,10 +39,10 @@ export const ReferralProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const { user } = useUser();
+  const { translations } = useTheme();
 
   const createReferral = useMutation(api.referral.createReferral);
 
-  // Using useReducer instead of useState for both `code` and `mode`
   const [state, dispatch] = useReducer(referralReducer, {
     code: "",
     mode: "Share",
@@ -73,18 +74,26 @@ export const ReferralProvider: React.FC<React.PropsWithChildren> = ({
     return (
       users?.map((user) => ({
         ...user,
-        status: workerMap.has(user._id) ? "mining" : "idle",
+        status: workerMap.has(user._id)
+          ? `${translations.network.content.mining}`
+          : `${translations.network.content.idle}`,
       })) || []
     );
   }, [users, workerMap]);
 
   const miningCount = useMemo(
-    () => referee.filter((user) => user.status === "mining").length,
+    () =>
+      referee.filter(
+        (user) => user.status === `${translations.network.content.mining}`,
+      ).length,
     [referee],
   );
 
   const idleCount = useMemo(
-    () => referee.filter((user) => user.status === "idle").length,
+    () =>
+      referee.filter(
+        (user) => user.status === `${translations.network.content.idle}`,
+      ).length,
     [referee],
   );
 
@@ -104,15 +113,15 @@ export const ReferralProvider: React.FC<React.PropsWithChildren> = ({
 
     if (result.success) {
       handleNotifier(
-        "Referral Success",
-        "The referral code has been successfully linked to your account.",
+        `${translations.network.notifier.success}`,
+        `${translations.network.notifier.successContent}`,
         "success",
       );
       dispatch({ type: "CLEAR_CODE" });
     } else {
       handleNotifier(
-        "Referral Failed",
-        "Invalid or duplicate referral code. Please enter a valid one.",
+        `${translations.network.notifier.fail}`,
+        `${translations.network.notifier.failContent}`,
         "error",
       );
       dispatch({ type: "CLEAR_CODE" });
