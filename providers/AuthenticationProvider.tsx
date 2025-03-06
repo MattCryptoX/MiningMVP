@@ -13,6 +13,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
 import { Theme } from "@/types/settings";
+import { hashId } from "@/hooks/useReferral";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PASSWORD_REGEX =
@@ -161,6 +162,7 @@ export const AuthenticationProvider: React.FC<React.PropsWithChildren> = ({
         email: state.emailAddress.trim(),
         username: state.username.trim(),
         balance: 0,
+        code: hashId(clerkId),
       };
 
       const { data: userId } = await createUser(userPayload);
