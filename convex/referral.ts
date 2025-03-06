@@ -32,7 +32,7 @@ export const updateReferral = mutation({
 
 export const fetchReferrals = query({
   args: {
-    userId: v.id("user"),
+    userId: v.optional(v.id("user")),
   },
   handler: async (
     ctx,
@@ -43,12 +43,12 @@ export const fetchReferrals = query({
     try {
       const referredByUser: Referral[] = await ctx.db
         .query("referral")
-        .withIndex("by_referrer", (q) => q.eq("referrer", userId))
+        .withIndex("by_referrer", (q) => q.eq("referrer", userId as Id<"user">))
         .collect();
 
       const referredToUser: Referral[] = await ctx.db
         .query("referral")
-        .withIndex("by_referee", (q) => q.eq("referee", userId))
+        .withIndex("by_referee", (q) => q.eq("referee", userId as Id<"user">))
         .collect();
 
       const flattenReferralIds = (
@@ -73,7 +73,7 @@ export const fetchReferrals = query({
         flattenedIds: flattenReferralIds(
           referredByUser,
           referredToUser,
-          userId,
+          userId as Id<"user">,
         ),
       };
     } catch (error) {
