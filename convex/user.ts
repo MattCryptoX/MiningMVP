@@ -72,3 +72,26 @@ export const fetchUsers = query({
     return { success: true, data: users.filter(Boolean) };
   },
 });
+
+export const fetchLeaderboard = query({
+  args: {},
+  handler: async (ctx) => {
+    const users = await ctx.db
+      .query("user")
+      .withIndex("by_balance")
+      .order("desc")
+      .take(50);
+
+    const usersWithPhotos = await Promise.all(
+      users.map(async (user) => {
+        let photoUrl = null;
+        if (user.photo) {
+          photoUrl = await ctx.storage.getUrl(user.photo);
+        }
+        return { ...user, photoUrl };
+      }),
+    );
+
+    return { success: true, data: usersWithPhotos };
+  },
+});

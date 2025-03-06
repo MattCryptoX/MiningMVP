@@ -6,7 +6,9 @@ import { workerSchema } from "./schemas/worker";
 import { referralSchema } from "./schemas/referral";
 
 export default defineSchema({
-  user: defineTable(userSchema).index("by_clerkId", ["clerkId"]),
+  user: defineTable(userSchema)
+    .index("by_clerkId", ["clerkId"])
+    .index("by_balance", ["balance"]),
   userSettings: defineTable(userSettingsSchema).index("by_userId", ["userId"]),
   worker: defineTable(workerSchema).index("by_userId", ["userId"]),
   referral: defineTable(referralSchema)
