@@ -94,8 +94,8 @@ export const createReferral = (theme: Theme) => {
       fontFamily: fonts.inter.semiBold,
     },
     unknownText: {
-      fontSize: 17.5,
-      marginTop: 50,
+      fontSize: 20,
+      textAlign: "center",
       color: themeColors.accent,
       fontFamily: fonts.inter.semiBold,
     },
@@ -116,6 +116,18 @@ export const createReferral = (theme: Theme) => {
       fontSize: 15,
       color: themeColors.warning,
       fontFamily: fonts.inter.semiBold,
+    },
+    codeText: {
+      fontSize: 20,
+      color: themeColors.accent,
+      fontFamily: fonts.inter.bold,
+    },
+    codeAction: {
+      position: "absolute",
+      right: 15,
+      padding: 10,
+      borderRadius: 10,
+      backgroundColor: themeColors.accent,
     },
   });
 };

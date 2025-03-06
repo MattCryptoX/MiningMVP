@@ -51,6 +51,11 @@ export const createInput = (theme: Theme) => {
       color: themeColors.text.primary,
       fontFamily: fonts.inter.semiBold,
     },
+    inputSpecial: {
+      fontSize: 20,
+      color: themeColors.accent,
+      fontFamily: fonts.inter.bold,
+    },
     pinCodeContainer: {
       width: 50,
       height: 50,
