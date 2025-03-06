@@ -26,6 +26,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-localization",
       "expo-secure-store",
       [
         "expo-splash-screen",
@@ -51,7 +52,8 @@
             "node_modules/@expo-google-fonts/inter/Inter_900Black.ttf"
           ]
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
