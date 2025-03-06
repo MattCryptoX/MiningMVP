@@ -5,5 +5,6 @@ export const userSchema = {
   email: v.string(),
   username: v.string(),
   balance: v.number(),
+  code: v.string(),
   photo: v.optional(v.string()),
 };

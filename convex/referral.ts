@@ -9,11 +9,38 @@ import { referralSchema } from "./schemas/referral";
 import { makeSchemaValuesOptional } from "./utils";
 
 export const createReferral = mutation({
-  args: referralSchema,
+  args: {
+    referrerId: v.id("user"),
+    refereeCode: v.string(),
+  },
   handler: async (ctx, args) => {
-    const referralId = await ctx.db.insert("referral", args);
+    try {
+      const referee = await ctx.db
+        .query("user")
+        .filter((q) => q.eq(q.field("code"), args.refereeCode))
+        .unique();
 
-    return { success: true, data: referralId };
+      const existingReferral = await ctx.db
+        .query("referral")
+        .filter((q) =>
+          q.and(
+            q.eq(q.field("referrer"), args.referrerId),
+            q.eq(q.field("referee"), referee?._id),
+          ),
+        )
+        .unique();
+
+      if (existingReferral) return { success: false };
+
+      const referralId = await ctx.db.insert("referral", {
+        referrer: args.referrerId,
+        referee: referee?._id as Id<"user">,
+      });
+
+      return { success: true, data: referralId };
+    } catch (error) {
+      return { success: false };
+    }
   },
 });
 
